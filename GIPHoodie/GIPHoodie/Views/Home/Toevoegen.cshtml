@@ -1,0 +1,47 @@
+﻿@model GIPHoodie.Models.VMArtikelAantal
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Toevoegen</title>
+</head>
+<body class="m-3 achtergrond">
+    <form asp-action="Toevoegen" asp-controller="Home">
+        <h2 class="titel">Online Hoodieshop - Item toevoegen aan winkelmandje</h2>
+        <table class="table">
+            <tr>
+                <td rowspan="4"><img class="" src="@Url.Content("~/images/" + Model.GeselecteerdArtikel.Foto)" /></td>
+                <td></td>
+                <td class="subTitel">ArtNr:</td>
+                <td>@Model.GeselecteerdArtikel.ArtikelID</td>
+            </tr>
+            <tr>
+                
+                <td class="subTitel"></td>
+                <td class="subTitel">Naam:</td>
+                <td>@Model.GeselecteerdArtikel.Naam</td>
+            </tr>
+            <tr>
+                
+                <td></td>
+                <td class="subTitel">Verkoopprijs:</td>
+                <td>€ @Model.GeselecteerdArtikel.Prijs</td>
+            </tr>
+            <tr>
+                
+                <td></td>
+                <td class="subTitel">Voorraad:</td>
+                <td>@Model.GeselecteerdArtikel.Voorraad</td>
+            </tr>
+
+        </table>
+        <p>Aantal toe te voegen aan het mandje: <input type="text"  asp-for="Aantal"/>  <input type="submit" asp-route-ArtNr="@Model.GeselecteerdArtikel.ArtikelID" value="Voeg toe aan het mandje..." /></p>
+        <p class="subTitel"><a asp-action="Index" asp-controller="Home">Terug naar de catalogus</a></p>
+    </form>
+</body>
+</html>

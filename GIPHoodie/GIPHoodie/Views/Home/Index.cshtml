@@ -1,0 +1,54 @@
+﻿@model GIPHoodie.Models.ArtikelRepository
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <title>Index</title>
+</head>
+<body class="m-3 achtergrond">
+    <form asp-action="Index" asp-controller="Home">
+        <h2 class="titel centreerTekst">Online Hoodieshop - Catalogus</h2>
+        <table class="table">
+            <tr class="subTitel centreerTekst">
+                <td>ArtNr</td>
+                <td>Naam</td>
+                <td>Foto</td>
+                <td>Prijs</td>
+                <td>Voorraad</td>
+
+                <td></td>
+            </tr>
+
+            @foreach (var art in Model.Artikels)
+            {
+        <tr class="centreerTekst">
+            <td>@art.ArtikelID</td>
+            <td>@art.Naam</td>
+            <td><img class="opmaakFoto" src=@Url.Content("~/images/" + art.Foto)></td>
+            <td>€ @art.Prijs</td>
+            <td>@art.Voorraad</td>
+
+
+            @if (art.Voorraad != 0)
+            {
+                <td><a asp-action="Toevoegen" asp-controller="Home" asp-route-ArtID="@art.ArtikelID">Voeg toe aan mandje...</a></td>
+            }
+            else
+            {
+                <td>Niet op voorraad</td>
+            }
+        </tr>
+            }
+        </table>     
+        <p class="centreerTekst"><input type="submit" value="Bekijkt de inhoud van het winkelmandje" /></p>
+        <p class="subTitel centreerTekst"><a>Afmelden</a></p>
+    </form>
+</body>
+</html>

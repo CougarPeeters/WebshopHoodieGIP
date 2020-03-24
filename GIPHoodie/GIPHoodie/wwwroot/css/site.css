@@ -1,0 +1,36 @@
+﻿.opmaakFoto{
+    width:200px;
+}
+
+.groteFoto{
+    width:500px;
+}
+.kleinefoto{
+    width:100px;
+}
+.achtergrond {
+    background-image: url('../images/BGWeb.PNG');
+}
+.centreerTekst{
+    text-align:center
+}
+
+.titel{
+    font-family: indie-flower, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.subTitel {
+    font-family: indie-flower, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.vuilbak{
+    width:50px;
+}
+
+.tekstRechts{
+    text-align:right;
+}
