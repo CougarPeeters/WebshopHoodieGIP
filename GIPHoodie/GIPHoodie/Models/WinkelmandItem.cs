@@ -20,5 +20,7 @@ namespace GIPHoodie.Models
         public double Prijs { get; set; }
 
         public double totaal { get; set; }
+
+        public bool HasRows { get; set; }
     }
 }

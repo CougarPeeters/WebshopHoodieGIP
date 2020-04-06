@@ -23,12 +23,12 @@ namespace GIPHoodie.Controllers
             return View(artikelRepo);
         }
 
-        //[HttpPost]
+        [HttpPost]
 
-        //public IActionResult Index()
-        //{
-        //    return RedirectToAction("Winkelmandje");
-        //}
+        public IActionResult Index(bool noUse)
+        {
+            return RedirectToAction("Winkelmand");
+        }
 
 
         public IActionResult Toevoegen(int ArtID)
@@ -56,19 +56,29 @@ namespace GIPHoodie.Controllers
 
         public IActionResult Winkelmand()
         {
-            Klant klant = new Klant();
-            WinkelmandRepository winkelmandRepository = new WinkelmandRepository();
-            Totaal totaal = new Totaal();
-            VMWinkelmand vMWinkelmand = new VMWinkelmand();
-            klant.KlantID = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID")); 
-            vMWinkelmand.klant = persistenceCode.KlantOphalen(klant.KlantID);
-            winkelmandRepository.winkelmandItems = persistenceCode.MandOphalen();
-            vMWinkelmand.winkelRepository = winkelmandRepository;
-            vMWinkelmand.totaal = persistenceCode.BerekenTotaal();
-          
+            VMWinkelmand vmWinkelmand = new VMWinkelmand();
+            int klantid = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
+            vmWinkelmand.klant = persistenceCode.KlantOphalen(Convert.ToInt32(klantid));
             
+            
+            if(persistenceCode.MandChecken(klantid) == true)
+            {
+                ViewBag.Controleer = true;
+                WinkelmandRepository winkelmandRepository = new WinkelmandRepository();
+                winkelmandRepository.winkelmandItems = persistenceCode.MandOphalen();
+                vmWinkelmand.winkelRepository = winkelmandRepository;
+                vmWinkelmand.totaal = persistenceCode.BerekenTotaal();
+                return View(vmWinkelmand);
+            }
+            else
+            {
+                ViewBag.Controleer = false; 
+                
+                return View(vmWinkelmand);
+            }
+         
 
-            return View(vMWinkelmand);
+            
         }
 
         public IActionResult Verwijderen(int ArtNr)

@@ -37,11 +37,10 @@
             </tr>
             <tr>
                 <td>Besteldatum:</td>
-                <td></td>
+                <td>@DateTime.Now.ToLongDateString()</td>
                 <td></td>
             </tr>
         </table>
-
         <table class="table">
             <tr>
                 <td></td>
@@ -52,26 +51,59 @@
                 <td>Prijs</td>
                 <td>Totaal</td>
             </tr>
-            @foreach (var mand in Model.winkelRepository.winkelmandItems)
-            {
-                <tr>
-                    <td><a asp-action="verwijderen" asp-controller="Home" asp-route-ArtNr="@mand.ArtikelNr" ><img class="vuilbak" src="~/images/vuilbak.png" /></a></td>
-                    <td><img class="kleinefoto centreerTekst" src="@Url.Content("~/images/" + mand.Foto)" /></td>
-                    <td>@mand.ArtikelNr</td>
-                    <td>@mand.naam</td>
-                    <td>@mand.Aantal</td>
-                    <td>@mand.Prijs</td>
-                    <td>@mand.totaal</td>
-                </tr>
-            }
         </table>
 
-        
-        <p class="tekstRechts">Totaal excl.: @Model.totaal.TotaalExcl</p>
-        <p class="tekstRechts">BTW (21%): @Model.totaal.BTW</p>
-        <p class="tekstRechts">Totaal incl.: @Model.totaal.TotaalIncl</p>
-        <p class="centreerTekst"><input type="submit" value="inhoud van het winkelmandje bestellen" /></p>
-        <p class="centreerTekst"><a asp-action="Index" asp-controller="Home">Terug naar de catalogus</a></p>
-    </form>
+        @if (ViewBag.Controleer == true)
+        {
+
+
+
+            @foreach (var mand in Model.winkelRepository.winkelmandItems)
+            {
+             <table class="table">
+                 <tr>
+                      <td><a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
+                      <td><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
+                     <td>@mand.ArtikelNr</td>
+                     <td>@mand.naam</td>
+                     <td>@mand.Aantal</td>
+                     <td>@mand.Prijs </td>
+                      <td>@mand.totaal</td>
+
+
+
+                </tr>
+              </table>
+                    }
+                
+
+
+                <table class="table">
+                    <tr>
+                        <td> Totaal exclu</td>
+                        <td>@string.Format("{0:c}", (Model.totaal.TotaalExcl))</td>
+                    </tr>
+                    <tr>
+                        <td> BTW (21%)</td>
+                        <td>@string.Format("{0:c}", (Model.totaal.BTW))</td>
+                    </tr>
+                    <tr>
+                        <td>Totaal inclu </td>
+                        <td>@string.Format("{0:c}", (Model.totaal.TotaalIncl))</td>
+                    </tr>
+
+                </table>
+
+        }
+        else
+        {
+            <p class="centreerTekst">Je mand is leeg.</p>
+        }
+
+
+            <p><input type="submit" value="Inhoud van het winkelmandje bestellen" /></p>
+
+            <p><a asp-action="Index">Terug naar de catalogus</a></p>
+        </form>
 </body>
 </html>

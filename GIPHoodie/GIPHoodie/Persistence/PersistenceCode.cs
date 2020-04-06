@@ -62,10 +62,13 @@ namespace GIPHoodie.Persistence
                 + winkelmanditem.ArtikelNr;
             MySqlCommand cmd = new MySqlCommand(qry1, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
-            bool mand = true;
+
+            
+            bool mand;
             if(dtr.HasRows)
             {
-               mand = true;
+
+                mand = true;
             }
             else
             {
@@ -75,7 +78,7 @@ namespace GIPHoodie.Persistence
             conn.Close();
 
             conn.Open();
-            if (mand==true)
+            if (mand == true)
             {
                 string qry2 = "update tblwinkelmand SET Aantal = Aantal +'" + winkelmanditem.Aantal + "' where(KlantID = '"+ winkelmanditem.KlantNr+"') and(ArtikelID = '"+winkelmanditem.ArtikelNr+"')";
                 MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
@@ -100,7 +103,7 @@ namespace GIPHoodie.Persistence
 
         
 
-        public List<WinkelmandItem> MandOphalen()
+        public List<WinkelmandItem> MandOphalen() //het ophalen van alle artikelen die de klant in zijn mand heeft gezet.
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
@@ -109,6 +112,7 @@ namespace GIPHoodie.Persistence
             MySqlCommand cmd = new MySqlCommand(qry, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
             List<WinkelmandItem> lijst = new List<WinkelmandItem>();
+            
             while (dtr.Read())
             {
                 WinkelmandItem winkelmanditem = new WinkelmandItem();
@@ -124,28 +128,9 @@ namespace GIPHoodie.Persistence
             return lijst;
         }
 
-        public bool HeeftItems()
-        {
-            MySqlConnection conn = new MySqlConnection(connStr);
-            conn.Open();
-            string qry = "select tblartikel.ArtikelID,Naam,aantal,foto,prijs,round((prijs*aantal),2) as totaal " +
-                "from tblartikel inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID";
-            MySqlCommand cmd = new MySqlCommand(qry, conn);
-            MySqlDataReader dtr = cmd.ExecuteReader();
-            if (dtr.HasRows)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+      
 
-
-
-
-        public Klant KlantOphalen(int klantid)
+        public Klant KlantOphalen(int klantid) //gegeven van de klant ophalen en vanboven bij de winkelmand in een tabel zetten
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
@@ -164,37 +149,40 @@ namespace GIPHoodie.Persistence
             return klant;
         }
 
-        public Totaal BerekenTotaal()
+        public bool MandChecken(int klantid) //kijken of er iets in de mand zit
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
-            string qry = "select round(sum(tblartikel.Prijs* tblwinkelmand.aantal),2) as totaalexcl, round(sum((tblartikel.prijs*tblwinkelmand.Aantal)*0.21),2) as btw, round(sum((tblartikel.Prijs * tblwinkelmand.Aantal)*1.21),2) as totaalincl from tblartikel " +
-                "inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID";
+            string qry = "select * from tblwinkelmand where KlantID=" + klantid;
+
             MySqlCommand cmd = new MySqlCommand(qry, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
-            Totaal totaal = new Totaal();
-            while (dtr.Read())
+            if(dtr.HasRows == true)
             {
-                totaal.TotaalExcl = Convert.ToDouble(dtr["totaalexcl"]);
-                totaal.BTW = Convert.ToDouble(dtr["btw"]);
-                totaal.TotaalIncl = Convert.ToDouble(dtr["totaalincl"]);
+                conn.Close();
+                return true;
             }
-            conn.Close();
-            return totaal;
+            else
+            {
+                conn.Close();
+                return false;
+            }
         }
-      
-        public void Verwijder(WinkelmandItem winkelmandItem)
+
+
+
+        public void Verwijder(WinkelmandItem winkelmandItem) // het verwijderen van een artikel uit de winkelmand, het aantal verwijderde artikels bij aantal terug toevoegen.
         {
-           
-                //voorraad + '" + winkelmandItem.Aantal + "' where ArtikelID = '" + winkelmandItem.ArtikelNr +"'";
+
+            
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
-            string qry1= "update tblartikel SET voorraad =  voorraad + " + winkelmandItem.Aantal + " where(ArtikelID = " + winkelmandItem.ArtikelNr + ")";
+            string qry1 = "update tblartikel SET voorraad =  voorraad + " + winkelmandItem.Aantal + " where(ArtikelID = " + winkelmandItem.ArtikelNr + ")";
             MySqlCommand cmd1 = new MySqlCommand(qry1, conn);
             cmd1.ExecuteNonQuery();
             conn.Close();
 
-   
+
             conn.Open();
             string qry2 = "delete from tblwinkelmand where ArtikelID=" + winkelmandItem.ArtikelNr;
             MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
@@ -204,7 +192,76 @@ namespace GIPHoodie.Persistence
 
         }
 
-        public int AantalOphalen(WinkelmandItem winkelmandItem)
+
+
+        public Totaal BerekenTotaal() // kijken of er artikels in winkelmand zitten, zo wel de: btw, totaalincl, totaalexcl berekenen.
+        {
+            
+            MySqlConnection conn = new MySqlConnection(connStr);  
+            conn.Open();
+            string qry1 = "select * from tblwinkelmand";
+            MySqlCommand cmd = new MySqlCommand(qry1, conn);
+            MySqlDataReader dtr = cmd.ExecuteReader();
+
+
+            bool check;
+            if (dtr.HasRows)
+            {
+
+                check = true;
+            }
+            else
+            {
+                check = false;
+
+            }
+            conn.Close();
+
+            conn.Open();
+            Totaal totaal = new Totaal();
+            if (check == true)
+            {
+                string qry2 = "select sum((prijs * aantal)) as totaalexcl, sum(((prijs * aantal)*0.21)) as btw, sum( ((prijs * aantal)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID";
+                ;
+                MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
+                MySqlDataReader dtr2 = cmd2.ExecuteReader();
+                
+                
+                    while (dtr2.Read())
+                    {
+                        totaal.BTW = Math.Round(Convert.ToDouble(dtr2["btw"]), 2);
+                        totaal.TotaalExcl = Math.Round(Convert.ToDouble(dtr2["totaalexcl"]), 2);
+                        totaal.TotaalIncl = Math.Round(Convert.ToDouble(dtr2["totaalincl"]), 2);
+                    
+                    
+                    }                    
+                 
+            }
+            else
+            {
+                string qry3 = "select sum((prijs *0)) as totaalexcl, sum(((prijs * 0)*0.21)) as btw, sum( ((prijs * 0)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID";
+                ;
+                MySqlCommand cmd3 = new MySqlCommand(qry3, conn);
+                cmd.ExecuteNonQuery();
+                
+
+               
+                    totaal.BTW = 0;
+                    totaal.TotaalExcl = 0;
+                    totaal.TotaalIncl = 0;
+                   
+                    
+                
+                
+            }
+            conn.Close();
+            return totaal;
+               
+            }
+
+
+
+        public int AantalOphalen(WinkelmandItem winkelmandItem) //aantal dat naar de winkelmand wordt gestuurd vanuit de catalogus.
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
@@ -212,7 +269,7 @@ namespace GIPHoodie.Persistence
             MySqlCommand cmd = new MySqlCommand(qry, conn);
 
             MySqlDataReader dtr = cmd.ExecuteReader();
-            int Aantal=0;
+            int Aantal = 0;
             while (dtr.Read())
             {
                 Aantal = Convert.ToInt32(dtr["aantal"]);

@@ -7,10 +7,10 @@ namespace GIPHoodie.Models
 {
     public class Totaal
     {
-        public double? TotaalExcl { get; set; }
+        public double TotaalExcl { get; set; }
 
-        public double? BTW { get; set; }
+        public double BTW { get; set; }
 
-        public double? TotaalIncl { get; set; }
+        public double TotaalIncl { get; set; }
     }
 }
