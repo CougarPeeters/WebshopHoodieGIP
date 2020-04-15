@@ -34,3 +34,7 @@
 .tekstRechts{
     text-align:right;
 }
+
+.tekstRechts {
+    text-align: left;
+}

@@ -1,0 +1,38 @@
+﻿
+@model GIPHoodie.Models.VMBestelling
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Bevestiging</title>
+</head>
+<body class="m-3">
+    <h2>Online Hoodieshop - Bestelbevestiging</h2>
+    <table>
+        <tr></tr>
+        <tr></tr>
+        <tr>
+            <td>We hebben uw bestelling met bestelnummer @Model.Bestelling.OrderID goed ontvangen</td>        
+        </tr>        
+        <tr>
+            <td>Na overschrijving van €@ViewBag.prijs op rekeningnummer BE32 1214 4389 1894 worden de goederen verpakt en verstuurd.</td>
+        </tr>      
+        <tr>
+            <td>U ontving deze bevestiging ook via e-mail.</td>
+        </tr>
+        <tr>
+            <td>Bedankt voor uw vertrouwen!</td>
+        </tr>
+        <tr>
+            <td>Hoodie team</td>
+        </tr>
+    </table>
+    <a class="centreerTekst" asp-action="Index" asp-controller="Home">Terug naar catalogus</a>
+</body>
+</html>

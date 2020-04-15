@@ -43,13 +43,12 @@
         </table>
         <table class="table">
             <tr>
-                <td></td>
-                <td>Foto</td>
-                <td>ArtNr</td>
-                <td>naam</td>
-                <td>Aantal</td>
-                <td>Prijs</td>
-                <td>Totaal</td>
+                <td class="centreerTekst">Foto</td>
+                <td class="centreerTekst">ArtNr</td>
+                <td class="centreerTekst">naam</td>
+                <td class="centreerTekst">Aantal</td>
+                <td class="centreerTekst">Prijs</td>
+                <td class="centreerTekst">Totaal</td>
             </tr>
         </table>
 
@@ -63,12 +62,12 @@
              <table class="table">
                  <tr>
                       <td><a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
-                      <td><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
-                     <td>@mand.ArtikelNr</td>
-                     <td>@mand.naam</td>
-                     <td>@mand.Aantal</td>
-                     <td>@mand.Prijs </td>
-                      <td>@mand.totaal</td>
+                      <td ><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
+                     <td class="centreerTekst">@mand.ArtikelNr</td>
+                     <td class="centreerTekst">@mand.naam</td>
+                     <td class="centreerTekst">@mand.Aantal</td>
+                     <td class="centreerTekst">@mand.Prijs </td>
+                      <td class="centreerTekst">@mand.totaal</td>
 
 
 
@@ -81,15 +80,15 @@
                 <table class="table">
                     <tr>
                         <td> Totaal exclu</td>
-                        <td>@string.Format("{0:c}", (Model.totaal.TotaalExcl))</td>
+                        <td>€@Model.totaal.TotaalExcl</td>
                     </tr>
                     <tr>
                         <td> BTW (21%)</td>
-                        <td>@string.Format("{0:c}", (Model.totaal.BTW))</td>
+                        <td>€@Model.totaal.BTW</td>
                     </tr>
                     <tr>
                         <td>Totaal inclu </td>
-                        <td>@string.Format("{0:c}", (Model.totaal.TotaalIncl))</td>
+                        <td>€@Model.totaal.TotaalIncl</td>
                     </tr>
 
                 </table>

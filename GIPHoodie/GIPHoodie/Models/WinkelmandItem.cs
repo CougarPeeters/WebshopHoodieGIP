@@ -21,6 +21,6 @@ namespace GIPHoodie.Models
 
         public double totaal { get; set; }
 
-        public bool HasRows { get; set; }
+        
     }
 }

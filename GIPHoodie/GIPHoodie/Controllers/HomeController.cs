@@ -44,14 +44,19 @@ namespace GIPHoodie.Controllers
         [HttpPost]
         public IActionResult Toevoegen(VMArtikelAantal vMArtikelAantal)
         {
-            WinkelmandItem winkelmand = new WinkelmandItem();
 
-            winkelmand.ArtikelNr = Convert.ToInt32(HttpContext.Session.GetInt32("ArtikelNr"));
-            winkelmand.KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
-            winkelmand.Aantal = vMArtikelAantal.Aantal;
 
-            persistenceCode.PasMandAan(winkelmand);
-            return RedirectToAction("Winkelmand", winkelmand);
+          
+                WinkelmandItem winkelmand = new WinkelmandItem();
+
+                winkelmand.ArtikelNr = Convert.ToInt32(HttpContext.Session.GetInt32("ArtikelNr"));
+                winkelmand.KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
+                winkelmand.Aantal = vMArtikelAantal.Aantal;
+
+                persistenceCode.PasMandAan(winkelmand);
+                return RedirectToAction("Winkelmand", winkelmand);
+           
+
         }
 
         public IActionResult Winkelmand()
@@ -64,10 +69,14 @@ namespace GIPHoodie.Controllers
             if(persistenceCode.MandChecken(klantid) == true)
             {
                 ViewBag.Controleer = true;
+
                 WinkelmandRepository winkelmandRepository = new WinkelmandRepository();
+                  
                 winkelmandRepository.winkelmandItems = persistenceCode.MandOphalen();
                 vmWinkelmand.winkelRepository = winkelmandRepository;
                 vmWinkelmand.totaal = persistenceCode.BerekenTotaal();
+                HttpContext.Session.SetString("Totaal", Convert.ToString(vmWinkelmand.totaal.TotaalIncl));
+
                 return View(vmWinkelmand);
             }
             else
@@ -81,6 +90,21 @@ namespace GIPHoodie.Controllers
             
         }
 
+        [HttpPost]
+        public IActionResult Winkelmand(VMBestelling vmBestelling)
+        {
+            int klantID = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
+            vmBestelling.klant = persistenceCode.KlantOphalen(klantID);
+            vmBestelling.Bestelling = persistenceCode.Bevestigen(klantID);
+            double TotaalIncl = Convert.ToDouble(HttpContext.Session.GetString("Totaal"));
+            ViewBag.TotaalIncl = TotaalIncl;
+            MailZender mailZender = new MailZender();
+            mailZender.klant=persistenceCode.KlantOphalen(klantID);
+            mailZender.StuurMail();
+            return RedirectToAction("Bevestiging");
+        }
+
+
         public IActionResult Verwijderen(int ArtNr)
         {
             WinkelmandItem winkelmand = new WinkelmandItem();
@@ -93,5 +117,16 @@ namespace GIPHoodie.Controllers
             return RedirectToAction("Winkelmand");
         }
 
+        public IActionResult Bevestiging(VMBestelling vmBestelling)
+        {
+            int klantID = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
+            vmBestelling.klant = persistenceCode.KlantOphalen(klantID);
+            vmBestelling.Bestelling = persistenceCode.Bevestigen(klantID);
+            double prijs = Convert.ToDouble(HttpContext.Session.GetString("Totaal"));
+            ViewBag.prijs = prijs;
+
+
+            return View(vmBestelling);
+        }
     }
 }

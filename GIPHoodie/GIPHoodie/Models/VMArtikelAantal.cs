@@ -10,7 +10,25 @@ namespace GIPHoodie.Models
     {
         [Required (ErrorMessage = "Verplicht veld.")]
         public int? Aantal { get; set; }
-
+        
         public Artikel GeselecteerdArtikel { get; set; }
+
+        //public string foutmelding()
+        //{
+        //    int voorraad = GeselecteerdArtikel.Voorraad;
+            
+        //    if (Aantal <= 0)
+        //    {
+        //        return "Moet een positief getal zijn";
+        //    }
+        //    else if(Aantal > voorraad)
+        //    {
+        //        return "Niet genoeg op voorraad";
+        //    }
+        //    else
+        //    {
+        //        return "";
+        //    }
+        //}
     }
 }

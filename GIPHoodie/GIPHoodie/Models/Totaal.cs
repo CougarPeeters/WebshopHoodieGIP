@@ -11,6 +11,6 @@ namespace GIPHoodie.Models
 
         public double BTW { get; set; }
 
-        public double TotaalIncl { get; set; }
+        public double? TotaalIncl { get; set; }
     }
 }
