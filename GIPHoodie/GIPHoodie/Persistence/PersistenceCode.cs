@@ -103,12 +103,12 @@ namespace GIPHoodie.Persistence
 
         
 
-        public List<WinkelmandItem> MandOphalen() //het ophalen van alle artikelen die de klant in zijn mand heeft gezet.
+        public List<WinkelmandItem> MandOphalen(int KlantID) //het ophalen van alle artikelen die de klant in zijn mand heeft gezet.
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
             string qry = "select tblartikel.ArtikelID,Naam,aantal,foto,prijs,round((prijs*aantal),2) as totaal " +
-                "from tblartikel inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID";
+                "from tblartikel inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID where klantID=" + KlantID ;
             MySqlCommand cmd = new MySqlCommand(qry, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
             List<WinkelmandItem> lijst = new List<WinkelmandItem>();
@@ -140,6 +140,7 @@ namespace GIPHoodie.Persistence
             Klant klant = new Klant();
             while (dtr.Read())
             {
+                klant.KlantID= Convert.ToInt32(dtr["KlantID"]);
                 klant.Naam = Convert.ToString(dtr["Naam"]);
                 klant.Adres = Convert.ToString(dtr["Adres"]);
                 klant.Gemeente = Convert.ToString(dtr["Gemeente"]);
@@ -185,7 +186,7 @@ namespace GIPHoodie.Persistence
 
 
             conn.Open();
-            string qry2 = "delete from tblwinkelmand where ArtikelID=" + winkelmandItem.ArtikelNr;
+            string qry2 = "delete from tblwinkelmand where ArtikelID=" + winkelmandItem.ArtikelNr + "and klantID=" + winkelmandItem.KlantNr ;
             MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
             cmd2.ExecuteNonQuery();
             conn.Close();
@@ -349,6 +350,21 @@ namespace GIPHoodie.Persistence
             return bestelling;
         }
 
+        public int CheckCredentials(Klant klant)
+        {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string qry = "select KlantID,GebrNaam,Wachtwoord from tblklanten where GebrNaam='" + klant.Naam + "'and binary wachtwoord ='" + klant.Wachtwoord + "'";
+            MySqlCommand cmd = new MySqlCommand(qry, conn);
+            MySqlDataReader dtr = cmd.ExecuteReader();
+            int userID = -1;
+            while (dtr.Read())
+            {
+                userID = Convert.ToInt32(dtr["klantID"]);
+            }
+            conn.Close();
+            return userID;
+        }
 
 
     }

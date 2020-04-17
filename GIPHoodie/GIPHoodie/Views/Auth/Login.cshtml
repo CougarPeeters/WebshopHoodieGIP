@@ -1,0 +1,33 @@
+﻿
+@model GIPHoodie.Models.Klant
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Login</title>
+</head>
+<body class="m-3">
+    <form asp-action="Login" asp-controller="Auth">
+        <h2>Inloggen</h2>
+        <table>
+            <tr>
+                <td>Gebruikersnaam: </td>
+                <td><input type="text" asp-for="Naam" /></td>
+            </tr>
+            <tr>
+                <td>Wachtwoord: </td>
+                <td><input type="text" asp-for="Wachtwoord" /></td>
+            </tr>
+        </table>
+        <p><input type="submit" value="meld aan." /></p>
+        <p>@ViewBag.fout</p>
+
+    </form>
+</body>
+</html>

@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using GIPHoodie.Models;
 using GIPHoodie.Persistence;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace GIPHoodie.Controllers
 {
@@ -15,6 +17,8 @@ namespace GIPHoodie.Controllers
     {
         PersistenceCode persistenceCode = new PersistenceCode();
 
+
+        [Authorize]
         public IActionResult Index()
         {
             HttpContext.Session.SetInt32("KlantID", 1);
@@ -22,7 +26,7 @@ namespace GIPHoodie.Controllers
             artikelRepo.Artikels = persistenceCode.loadArtikels();
             return View(artikelRepo);
         }
-
+        [Authorize]
         [HttpPost]
 
         public IActionResult Index(bool noUse)
@@ -30,7 +34,7 @@ namespace GIPHoodie.Controllers
             return RedirectToAction("Winkelmand");
         }
 
-
+        [Authorize]
         public IActionResult Toevoegen(int ArtID)
         {
             HttpContext.Session.SetInt32("ArtikelNr", ArtID);
@@ -40,7 +44,7 @@ namespace GIPHoodie.Controllers
 
             return View(vmArtikelAantal);
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Toevoegen(VMArtikelAantal vMArtikelAantal)
         {
@@ -58,7 +62,7 @@ namespace GIPHoodie.Controllers
            
 
         }
-
+        [Authorize]
         public IActionResult Winkelmand()
         {
             VMWinkelmand vmWinkelmand = new VMWinkelmand();
@@ -72,7 +76,7 @@ namespace GIPHoodie.Controllers
 
                 WinkelmandRepository winkelmandRepository = new WinkelmandRepository();
                   
-                winkelmandRepository.winkelmandItems = persistenceCode.MandOphalen();
+                winkelmandRepository.winkelmandItems = persistenceCode.MandOphalen(klantid);
                 vmWinkelmand.winkelRepository = winkelmandRepository;
                 vmWinkelmand.totaal = persistenceCode.BerekenTotaal();
                 HttpContext.Session.SetString("Totaal", Convert.ToString(vmWinkelmand.totaal.TotaalIncl));
@@ -89,7 +93,7 @@ namespace GIPHoodie.Controllers
 
             
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Winkelmand(VMBestelling vmBestelling)
         {
@@ -104,7 +108,7 @@ namespace GIPHoodie.Controllers
             return RedirectToAction("Bevestiging");
         }
 
-
+        [Authorize]
         public IActionResult Verwijderen(int ArtNr)
         {
             WinkelmandItem winkelmand = new WinkelmandItem();
@@ -116,7 +120,7 @@ namespace GIPHoodie.Controllers
             persistenceCode.Verwijder(winkelmand);
             return RedirectToAction("Winkelmand");
         }
-
+        [Authorize]
         public IActionResult Bevestiging(VMBestelling vmBestelling)
         {
             int klantID = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
@@ -128,5 +132,8 @@ namespace GIPHoodie.Controllers
 
             return View(vmBestelling);
         }
+
+       
+
     }
 }
