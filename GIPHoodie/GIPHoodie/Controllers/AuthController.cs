@@ -38,7 +38,7 @@ namespace GIPHoodie.Controllers
                 if (persistenceCode.CheckCredentials(klantCr) != -1)
                 {
 
-                    HttpContext.Session.SetString("klantID", Convert.ToString(persistenceCode.CheckCredentials(klantCr)));
+                    HttpContext.Session.SetInt32("KlantID", Convert.ToInt32(persistenceCode.CheckCredentials(klantCr)));
                     var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, klantCr.Naam)

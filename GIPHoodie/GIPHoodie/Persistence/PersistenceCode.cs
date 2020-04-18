@@ -55,7 +55,7 @@ namespace GIPHoodie.Persistence
         }
 
         public void PasMandAan(WinkelmandItem winkelmanditem) // een geselecteerd artikel in de database in een winkelmand opslaan of aanpassen
-        {           
+        {
             MySqlConnection conn = new MySqlConnection(connStr);  //KlantID=" + winkelmanditem.KlantNr + " and 
             conn.Open();
             string qry1 = "select * from tblwinkelmand where KlantID=" + winkelmanditem.KlantNr + " and  ArtikelID="
@@ -63,9 +63,9 @@ namespace GIPHoodie.Persistence
             MySqlCommand cmd = new MySqlCommand(qry1, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
 
-            
+
             bool mand;
-            if(dtr.HasRows)
+            if (dtr.HasRows)
             {
 
                 mand = true;
@@ -80,7 +80,7 @@ namespace GIPHoodie.Persistence
             conn.Open();
             if (mand == true)
             {
-                string qry2 = "update tblwinkelmand SET Aantal = Aantal +'" + winkelmanditem.Aantal + "' where(KlantID = '"+ winkelmanditem.KlantNr+"') and(ArtikelID = '"+winkelmanditem.ArtikelNr+"')";
+                string qry2 = "update tblwinkelmand SET Aantal = Aantal +'" + winkelmanditem.Aantal + "' where(KlantID = '" + winkelmanditem.KlantNr + "') and(ArtikelID = '" + winkelmanditem.ArtikelNr + "')";
                 MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
                 cmd2.ExecuteNonQuery();
 
@@ -101,18 +101,18 @@ namespace GIPHoodie.Persistence
             conn.Close();
         }
 
-        
+
 
         public List<WinkelmandItem> MandOphalen(int KlantID) //het ophalen van alle artikelen die de klant in zijn mand heeft gezet.
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
             string qry = "select tblartikel.ArtikelID,Naam,aantal,foto,prijs,round((prijs*aantal),2) as totaal " +
-                "from tblartikel inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID where klantID=" + KlantID ;
+                "from tblartikel inner join tblwinkelmand on tblartikel.artikelID = tblwinkelmand.artikelID where klantID=" + KlantID;
             MySqlCommand cmd = new MySqlCommand(qry, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
             List<WinkelmandItem> lijst = new List<WinkelmandItem>();
-            
+
             while (dtr.Read())
             {
                 WinkelmandItem winkelmanditem = new WinkelmandItem();
@@ -128,7 +128,7 @@ namespace GIPHoodie.Persistence
             return lijst;
         }
 
-      
+
 
         public Klant KlantOphalen(int klantid) //gegeven van de klant ophalen en vanboven bij de winkelmand in een tabel zetten
         {
@@ -140,7 +140,7 @@ namespace GIPHoodie.Persistence
             Klant klant = new Klant();
             while (dtr.Read())
             {
-                klant.KlantID= Convert.ToInt32(dtr["KlantID"]);
+                klant.KlantID = Convert.ToInt32(dtr["KlantID"]);
                 klant.Naam = Convert.ToString(dtr["Naam"]);
                 klant.Adres = Convert.ToString(dtr["Adres"]);
                 klant.Gemeente = Convert.ToString(dtr["Gemeente"]);
@@ -159,7 +159,7 @@ namespace GIPHoodie.Persistence
 
             MySqlCommand cmd = new MySqlCommand(qry, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
-            if(dtr.HasRows == true)
+            if (dtr.HasRows == true)
             {
                 conn.Close();
                 return true;
@@ -176,7 +176,7 @@ namespace GIPHoodie.Persistence
         public void Verwijder(WinkelmandItem winkelmandItem) // het verwijderen van een artikel uit de winkelmand, het aantal verwijderde artikels bij aantal terug toevoegen.
         {
 
-            
+
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
             string qry1 = "update tblartikel SET voorraad =  voorraad + " + winkelmandItem.Aantal + " where(ArtikelID = " + winkelmandItem.ArtikelNr + ")";
@@ -186,7 +186,7 @@ namespace GIPHoodie.Persistence
 
 
             conn.Open();
-            string qry2 = "delete from tblwinkelmand where ArtikelID=" + winkelmandItem.ArtikelNr + "and klantID=" + winkelmandItem.KlantNr ;
+            string qry2 = "delete from tblwinkelmand where KlantID='" + winkelmandItem.KlantNr + "'and ArtikelID =" + winkelmandItem.ArtikelNr;
             MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
             cmd2.ExecuteNonQuery();
             conn.Close();
@@ -196,12 +196,12 @@ namespace GIPHoodie.Persistence
 
 
 
-        public Totaal BerekenTotaal() // kijken of er artikels in winkelmand zitten, zo wel de: btw, totaalincl, totaalexcl berekenen.
+        public Totaal BerekenTotaal(int klantid) // kijken of er artikels in winkelmand zitten, zo wel de: btw, totaalincl, totaalexcl berekenen.
         {
-            
-            MySqlConnection conn = new MySqlConnection(connStr);  
+
+            MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
-            string qry1 = "select * from tblwinkelmand";
+            string qry1 = "select * from tblwinkelmand where klantid=" + klantid;
             MySqlCommand cmd = new MySqlCommand(qry1, conn);
             MySqlDataReader dtr = cmd.ExecuteReader();
 
@@ -223,43 +223,43 @@ namespace GIPHoodie.Persistence
             Totaal totaal = new Totaal();
             if (check == true)
             {
-                string qry2 = "select sum((prijs * aantal)) as totaalexcl, sum(((prijs * aantal)*0.21)) as btw, sum( ((prijs * aantal)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID";
+                string qry2 = "select sum((prijs * aantal)) as totaalexcl, sum(((prijs * aantal)*0.21)) as btw, sum( ((prijs * aantal)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID where klantid =" + klantid;
                 ;
                 MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
                 MySqlDataReader dtr2 = cmd2.ExecuteReader();
-                
-                
-                    while (dtr2.Read())
-                    {
-                        totaal.BTW = Math.Round(Convert.ToDouble(dtr2["btw"]), 2);
-                        totaal.TotaalExcl = Math.Round(Convert.ToDouble(dtr2["totaalexcl"]), 2);
-                        totaal.TotaalIncl = Math.Round(Convert.ToDouble(dtr2["totaalincl"]), 2);
-                    
-                    
-                    }                    
-                 
+
+
+                while (dtr2.Read())
+                {
+                    totaal.BTW = Math.Round(Convert.ToDouble(dtr2["btw"]), 2);
+                    totaal.TotaalExcl = Math.Round(Convert.ToDouble(dtr2["totaalexcl"]), 2);
+                    totaal.TotaalIncl = Math.Round(Convert.ToDouble(dtr2["totaalincl"]), 2);
+
+
+                }
+
             }
             else
             {
-                string qry3 = "select sum((prijs *0)) as totaalexcl, sum(((prijs * 0)*0.21)) as btw, sum( ((prijs * 0)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID";
+                string qry3 = "select sum((prijs *0)) as totaalexcl, sum(((prijs * 0)*0.21)) as btw, sum( ((prijs * 0)*1.21)) as totaalincl from tblartikel inner join tblwinkelmand on tblwinkelmand.ArtikelID = tblArtikel.ArtikelID where klantid=" + klantid;
                 ;
                 MySqlCommand cmd3 = new MySqlCommand(qry3, conn);
                 cmd.ExecuteNonQuery();
-                
 
-               
-                    totaal.BTW = 0;
-                    totaal.TotaalExcl = 0;
-                    totaal.TotaalIncl = 0;
-                   
-                    
-                
-                
+
+
+                totaal.BTW = 0;
+                totaal.TotaalExcl = 0;
+                totaal.TotaalIncl = 0;
+
+
+
+
             }
             conn.Close();
             return totaal;
-               
-            }
+
+        }
 
 
 
@@ -284,7 +284,7 @@ namespace GIPHoodie.Persistence
         //2. Het ordernr dat zonet gegenereerd werd ophalen want dit is ook nodig in tblBestellijnen
         //3. Een list maken van alle artikels in de winkelmand
         //4. aanmaken van een bestellijn waar de artikels ingestoken worden en je winkelmand terug leeg maken.
-        
+
 
         public Bestelling Bevestigen(int KlantID)
         {
@@ -305,6 +305,7 @@ namespace GIPHoodie.Persistence
             while (dtr.Read())
             {
                 bestelling.OrderID = Convert.ToInt32(dtr["OrderID"]);
+
             }
             conn.Close();
 
@@ -314,13 +315,13 @@ namespace GIPHoodie.Persistence
             "where tblwinkelmand.KlantID =" + KlantID;
             MySqlCommand cmd2 = new MySqlCommand(qry2, conn);
             MySqlDataReader dtr2 = cmd2.ExecuteReader();
-            List<WinkelmandItem> lijst = new List<WinkelmandItem>(); 
+            List<WinkelmandItem> lijst = new List<WinkelmandItem>();
             while (dtr2.Read())
             {
                 WinkelmandItem wmItem = new WinkelmandItem();
                 wmItem.ArtikelNr = Convert.ToInt32(dtr2["ArtikelID"]);
                 wmItem.Aantal = Convert.ToInt32(dtr2["Aantal"]);
-                wmItem.Prijs = Convert.ToDouble(dtr2["Prijs"]);   
+                wmItem.Prijs = Convert.ToDouble(dtr2["Prijs"]);
 
                 lijst.Add(wmItem);
             }
@@ -329,14 +330,14 @@ namespace GIPHoodie.Persistence
             conn.Open();
             foreach (var artikel in lijst)
             {
-                
-              
+
+
                 string corrPrijs = Convert.ToString(artikel.Prijs).Replace(",", ".");
                 string qry3 = "insert into tblbestellijn (ArtikelID, OrderID,Aantal,Prijs) values " +
                 "(" + artikel.ArtikelNr + "," + bestelling.OrderID + "," + artikel.Aantal + "," + corrPrijs + ")";
                 MySqlCommand cmd3 = new MySqlCommand(qry3, conn);
                 cmd3.ExecuteNonQuery();
-                
+
             }
             conn.Close();
 
@@ -365,6 +366,7 @@ namespace GIPHoodie.Persistence
             conn.Close();
             return userID;
         }
+
 
 
     }

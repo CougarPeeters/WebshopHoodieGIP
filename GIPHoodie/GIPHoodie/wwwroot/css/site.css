@@ -38,3 +38,14 @@
 .tekstRechts {
     text-align: left;
 }
+.Foutmelding{
+    color:red;
+    font-weight:bold
+}
+.tekstVet {
+
+    font-weight: bold;
+}
+.onderlijn{
+    text-decoration:underline;
+}

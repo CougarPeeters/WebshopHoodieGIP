@@ -6,9 +6,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
+    <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">*@
     <link href="~/css/site.css" rel="stylesheet" />
     <title>Login</title>
 </head>
@@ -22,11 +22,11 @@
             </tr>
             <tr>
                 <td>Wachtwoord: </td>
-                <td><input type="text" asp-for="Wachtwoord" /></td>
+                <td><input type="password" asp-for="Wachtwoord" /></td>
             </tr>
         </table>
         <p><input type="submit" value="meld aan." /></p>
-        <p>@ViewBag.fout</p>
+        <p class="Foutmelding">@ViewBag.fout</p>
 
     </form>
 </body>

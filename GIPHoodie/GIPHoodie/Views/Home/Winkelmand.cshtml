@@ -5,28 +5,30 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <link rel="stylesheet" href="https://use.typekit.net/idk3wns.css">
     <link href="~/css/site.css" rel="stylesheet" />
+
+
     <title>Winkelmand</title>
 </head>
 <body class="m-3">
     <form asp-action="Winkelmand" asp-controller="Home">
-        <h2>Online Hoodieshop - Winkelmandje</h2>
+        <h2 class="titel">Online Hoodieshop - Winkelmandje</h2>
         <table class="table">
             <tr>
-                <td>KlantNr:</td>
+                <td class="subTitel">KlantNr:</td>
                 <td>@Model.klant.KlantID</td>
                 <td></td>
             </tr>
             <tr>
-                <td>Naam:</td>
+                <td  class="subTitel">Naam:</td>
                 <td>@Model.klant.Naam</td>
                 <td></td>
             </tr>
             <tr>
-                <td>Adres:</td>
+                <td  class="subTitel">Adres:</td>
                 <td>@Model.klant.Adres</td>
                 <td></td>
             </tr>
@@ -36,19 +38,20 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Besteldatum:</td>
+                <td class="subTitel">Besteldatum:</td>
                 <td>@DateTime.Now.ToLongDateString()</td>
                 <td></td>
             </tr>
         </table>
         <table class="table">
             <tr>
-                <td class="centreerTekst">Foto</td>
-                <td class="centreerTekst">ArtNr</td>
-                <td class="centreerTekst">naam</td>
-                <td class="centreerTekst">Aantal</td>
-                <td class="centreerTekst">Prijs</td>
-                <td class="centreerTekst">Totaal</td>
+                
+                <td class="subTitel">Foto</td>
+                <td class="subTitel">ArtNr</td>
+                <td class="subTitel">naam</td>
+                <td class="subTitel">Aantal</td>
+                <td class="subTitel">Prijs</td>
+                <td class="subTitel">Totaal</td>
             </tr>
         </table>
 
@@ -61,16 +64,17 @@
             {
              <table class="table">
                  <tr>
-                      <td><a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
-                      <td ><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
+                     <td><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
                      <td class="centreerTekst">@mand.ArtikelNr</td>
                      <td class="centreerTekst">@mand.naam</td>
                      <td class="centreerTekst">@mand.Aantal</td>
                      <td class="centreerTekst">€@mand.Prijs </td>
-                      <td class="centreerTekst">€@mand.totaal</td>
+                     <td class="centreerTekst">€@mand.totaal</td>
+                     <td><a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
 
 
-                </tr>
+
+                 </tr>
               </table>
                     }
                 
@@ -78,15 +82,15 @@
 
                 <table class="table">
                     <tr>
-                        <td> Totaal exclu</td>
+                        <td  class="subTitel"> Totaal exclu</td>
                         <td>€@Model.totaal.TotaalExcl</td>
                     </tr>
                     <tr>
-                        <td> BTW (21%)</td>
+                        <td  class="subTitel"> BTW (21%)</td>
                         <td>€@Model.totaal.BTW</td>
                     </tr>
                     <tr>
-                        <td>Totaal inclu </td>
+                        <td  class="subTitel">Totaal inclu </td>
                         <td>€@Model.totaal.TotaalIncl</td>
                     </tr>
 
@@ -101,7 +105,7 @@
 
             <p><input type="submit" value="Inhoud van het winkelmandje bestellen" /></p>
 
-            <p><a asp-action="Index">Terug naar de catalogus</a></p>
+            <p class="centreerTekst subTitel"><a asp-action="Index">Terug naar de catalogus</a></p>
         </form>
 </body>
 </html>
