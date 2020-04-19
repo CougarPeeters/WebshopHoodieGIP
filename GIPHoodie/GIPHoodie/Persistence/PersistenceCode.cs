@@ -350,8 +350,8 @@ namespace GIPHoodie.Persistence
 
             return bestelling;
         }
-
-        public int CheckCredentials(Klant klant)
+        
+        public int CheckCredentials(Klant klant)//controleren of de combienatie van gebruikersnaam en wachtwoord overeen komen
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
@@ -367,7 +367,7 @@ namespace GIPHoodie.Persistence
             return userID;
         }
 
-        public int VoorraadOphalen(int ArtNr)
+        public int VoorraadOphalen(int ArtNr) //ophalen vooraad voor om te zien of er genoeg zijn om naar het winkemmandje te sturen
         {
             MySqlConnection conn = new MySqlConnection(connStr);
             conn.Open();
