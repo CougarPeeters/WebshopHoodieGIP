@@ -7,6 +7,8 @@
 }
 .kleinefoto{
     width:100px;
+
+    
 }
 .achtergrond {
     background-image: url('../images/BGWeb.PNG');
@@ -28,14 +30,14 @@
 }
 
 .vuilbak{
-    width:50px;
+    width:35px;
 }
 
 .tekstRechts{
     text-align:right;
 }
 
-.tekstRechts {
+.tekstlinks {
     text-align: left;
 }
 .Foutmelding{
@@ -48,4 +50,43 @@
 }
 .onderlijn{
     text-decoration:underline;
+}
+.kader {
+    margin-left: 300px;
+    margin-right: 300px;
+    margin-bottom: 200px;
+    margin-top: 80px;
+    padding-top: 50px;
+    background-color:gainsboro;
+    border:solid;
+}
+.VuilOpschuiven {
+    
+    margin-left: 10px;
+    margin-right:10px
+}
+.FotoOpschuiven {
+    
+    margin-left: 10px;
+
+}
+.TeksWM {
+    white-space:pre-wrap;
+}
+.fotoWinkM{
+     padding-right:20px;
+     margin-right:20px;
+}
+.colomBreedte{
+    width:100px;
+}
+.kaderBev {
+    margin-left: 300px;
+    margin-right: 300px;
+    margin-bottom: 200px;
+    margin-top: 80px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: gainsboro;
+    border: solid;
 }

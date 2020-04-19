@@ -367,7 +367,21 @@ namespace GIPHoodie.Persistence
             return userID;
         }
 
-
+        public int VoorraadOphalen(int ArtNr)
+        {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string qry = "select voorraad from tblartikel where ArtikelID="+ ArtNr;
+            MySqlCommand cmd = new MySqlCommand(qry, conn);
+            MySqlDataReader dtr = cmd.ExecuteReader();
+            int voorraad=0;
+            while (dtr.Read())
+            {
+                voorraad = Convert.ToInt32(dtr["voorraad"]);
+            }
+            conn.Close();
+            return voorraad;
+        }
 
     }
 }

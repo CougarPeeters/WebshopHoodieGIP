@@ -23,12 +23,12 @@
                 <td></td>
             </tr>
             <tr>
-                <td  class="subTitel">Naam:</td>
+                <td class="subTitel">Naam:</td>
                 <td>@Model.klant.Naam</td>
                 <td></td>
             </tr>
             <tr>
-                <td  class="subTitel">Adres:</td>
+                <td class="subTitel">Adres:</td>
                 <td>@Model.klant.Adres</td>
                 <td></td>
             </tr>
@@ -44,14 +44,15 @@
             </tr>
         </table>
         <table class="table">
-            <tr>
-                
-                <td class="subTitel">Foto</td>
-                <td class="subTitel">ArtNr</td>
-                <td class="subTitel">naam</td>
-                <td class="subTitel">Aantal</td>
-                <td class="subTitel">Prijs</td>
-                <td class="subTitel">Totaal</td>
+            <tr class="subTitel centreerTekst">
+
+                <td class="colomBreedte">Foto</td>
+                <td class="colomBreedte">ArtNr</td>
+                <td class="colomBreedte">naam</td>
+                <td class="colomBreedte">Aantal</td>
+                <td class="colomBreedte">Prijs</td>
+                <td class="colomBreedte">Totaal</td>
+                <td class="colomBreedte"></td>
             </tr>
         </table>
 
@@ -62,39 +63,42 @@
 
             @foreach (var mand in Model.winkelRepository.winkelmandItems)
             {
-             <table class="table">
-                 <tr>
-                     <td><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
-                     <td class="centreerTekst">@mand.ArtikelNr</td>
-                     <td class="centreerTekst">@mand.naam</td>
-                     <td class="centreerTekst">@mand.Aantal</td>
-                     <td class="centreerTekst">€@mand.Prijs </td>
-                     <td class="centreerTekst">€@mand.totaal</td>
-                     <td><a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
-
-
-
-                 </tr>
-              </table>
-                    }
-                
-
-
-                <table class="table">
+                <table class="table centreerTekst">
                     <tr>
-                        <td  class="subTitel"> Totaal exclu</td>
-                        <td>€@Model.totaal.TotaalExcl</td>
-                    </tr>
-                    <tr>
-                        <td  class="subTitel"> BTW (21%)</td>
-                        <td>€@Model.totaal.BTW</td>
-                    </tr>
-                    <tr>
-                        <td  class="subTitel">Totaal inclu </td>
-                        <td>€@Model.totaal.TotaalIncl</td>
-                    </tr>
+                        <td class="colomBreedte"><img class="kleinefoto" src="@Url.Content("~/images/" + mand.Foto)"></td>
+                        <td  class="colomBreedte">@mand.ArtikelNr</td>
+                        <td class="colomBreedte">@mand.naam</td>
+                        <td class="colomBreedte">@mand.Aantal</td>
+                        <td class="colomBreedte">€@mand.Prijs </td>
+                        <td class="colomBreedte">€@mand.totaal</td>
+                        <td class="colomBreedte"> <a asp-action="verwijderen" asp-route-ArtNr="@mand.ArtikelNr" asp-route-Aantal="@mand.Aantal" asp-controller="Home"> <img class="vuilbak VuilOpschuiven" src="@Url.Content("~/images/vuilbak.png")" /> </a></td>
 
+
+
+
+
+
+                    </tr>
                 </table>
+            }
+
+
+
+            <table class="table">
+                <tr>
+                    <td class="subTitel"> Totaal exclu</td>
+                    <td>€@Model.totaal.TotaalExcl</td>
+                </tr>
+                <tr>
+                    <td class="subTitel"> BTW (21%)</td>
+                    <td>€@Model.totaal.BTW</td>
+                </tr>
+                <tr>
+                    <td class="subTitel">Totaal inclu </td>
+                    <td>€@Model.totaal.TotaalIncl</td>
+                </tr>
+
+            </table>
 
         }
         else
@@ -102,10 +106,18 @@
             <p class="centreerTekst">Je mand is leeg.</p>
         }
 
-
+        @if (ViewBag.Controleer == true)
+        {
             <p><input type="submit" value="Inhoud van het winkelmandje bestellen" /></p>
 
-            <p class="centreerTekst subTitel"><a asp-action="Index">Terug naar de catalogus</a></p>
-        </form>
+        }
+        else
+        {
+            <p><input type="submit" disabled="disabled" value="Inhoud van het winkelmandje bestellen" /></p>
+
+        }
+
+        <p class="centreerTekst subTitel"><a asp-action="Index">Terug naar de catalogus</a></p>
+    </form>
 </body>
 </html>

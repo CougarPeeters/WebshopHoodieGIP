@@ -21,8 +21,8 @@ namespace GIPHoodie.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            
-            //HttpContext.Session.SetInt32("KlantID",1);
+
+
             ArtikelRepository artikelRepo = new ArtikelRepository();
             artikelRepo.Artikels = persistenceCode.loadArtikels();
             return View(artikelRepo);
@@ -50,17 +50,53 @@ namespace GIPHoodie.Controllers
         [HttpPost]
         public IActionResult Toevoegen(VMToevoegen vmToevoegen)
         {
-            
-                WinkelmandItem winkelmand = new WinkelmandItem();
+            WinkelmandItem winkelmand = new WinkelmandItem();
+            Artikel art = new Artikel();
+            vmToevoegen.GeselecteerdArtikel = persistenceCode.loadArtikel(Convert.ToInt32(HttpContext.Session.GetInt32("ArtikelNr")));
+            vmToevoegen.invoer = Convert.ToString(vmToevoegen.Aantal);
+            art.Voorraad = persistenceCode.VoorraadOphalen(Convert.ToInt32(HttpContext.Session.GetInt32("ArtikelNr")));
+            if (ModelState.IsValid)
+            {
 
                 winkelmand.ArtikelNr = Convert.ToInt32(HttpContext.Session.GetInt32("ArtikelNr"));
                 winkelmand.KlantNr = Convert.ToInt32(HttpContext.Session.GetInt32("KlantID"));
-                winkelmand.Aantal = vmToevoegen.Aantal;
+                winkelmand.Aantal = Convert.ToInt32(vmToevoegen.invoer);
                 HttpContext.Session.SetString("Aantal", Convert.ToString(vmToevoegen.Aantal));
 
 
-            persistenceCode.PasMandAan(winkelmand);
-                return RedirectToAction("Winkelmand", winkelmand);
+                if (int.TryParse(vmToevoegen.invoer, out int aantal))
+                {
+
+                    if (aantal < 1)
+                    {
+                        ViewBag.FoutToevoegen = "Je moet minstens 1 item bestellen";
+                        return View(vmToevoegen);
+                    }
+                    else if (aantal > art.Voorraad)
+                    {
+                        ViewBag.FoutToevoegen = "Je kan niet meer bestellen dan wij in voorraad hebben";
+                        return View(vmToevoegen);
+                    }
+                    else
+                    {
+                        persistenceCode.PasMandAan(winkelmand);
+                        return RedirectToAction("Winkelmand", winkelmand);
+                    }
+                }
+                else
+                {
+                    vmToevoegen.Aantal = aantal;
+                    ViewBag.FoutToevoegen = "Je moet een geheel ingeven";
+                    return View(vmToevoegen);
+                }
+
+
+            }
+            else
+            {
+                return View(vmToevoegen);
+            }
+
 
 
         }
